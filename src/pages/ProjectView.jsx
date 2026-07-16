@@ -144,13 +144,8 @@ export default function ProjectView() {
             <img src="/logo-ifmg.png" alt="Logo IFMG" style={{ height: '45px', objectFit: 'contain' }} />
           </div>
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-4">
-              <button onClick={() => navigate('/')} style={{ background: 'transparent', color: 'white', padding: '0.2rem', paddingRight: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.2rem', fontWeight: 600 }}>
-                <ArrowLeft size={20} />
-              </button>
-              <h1 style={{ fontSize: '1.8rem', margin: 0, letterSpacing: '-0.02em', fontWeight: 800, textTransform: 'uppercase' }}>{project.name}</h1>
-            </div>
-            <div style={{ display: 'flex', gap: '1.5rem', marginLeft: '3rem', fontSize: '0.85rem', fontWeight: 600 }}>
+            <h1 style={{ fontSize: '1.8rem', margin: 0, letterSpacing: '-0.02em', fontWeight: 800, textTransform: 'uppercase' }}>{project.name}</h1>
+            <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', fontWeight: 600 }}>
               <span>Início: {new Date(project.startDate).toLocaleDateString('pt-BR')}</span>
               <span>Fim: {new Date(project.endDate).toLocaleDateString('pt-BR')}</span>
             </div>
@@ -158,6 +153,32 @@ export default function ProjectView() {
         </div>
 
         <div className="flex gap-4 items-center project-header-actions">
+          <button 
+            onClick={() => navigate('/')}
+            style={{ 
+              background: 'rgba(255, 255, 255, 0.15)', 
+              color: 'white', 
+              border: '1px solid rgba(255, 255, 255, 0.4)', 
+              boxShadow: '0 2px 4px rgba(0,0,0,0.05)', 
+              padding: '0.5rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              borderRadius: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+            }}
+          >
+            <ArrowLeft size={18} /> Voltar
+          </button>
+          
           <button 
             onClick={generatePDF}
             className="btn-primary"
