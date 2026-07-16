@@ -48,7 +48,7 @@ export default function ProjectView() {
   const saveProject = async (updatedProject) => {
     try {
       setProject(updatedProject); // Atualiza UI instantaneamente (Optimistic UI)
-      const projects = getLocalProjects(); // Usa dados em memória
+      const projects = await getLocalProjects(); // Usa dados em memória
       const updatedList = projects.map(p => p.id === updatedProject.id ? updatedProject : p);
       if (!updatedList.find(p => p.id === updatedProject.id)) {
         updatedList.push(updatedProject);
