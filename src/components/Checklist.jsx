@@ -123,7 +123,7 @@ export default function Checklist({ stages, onUpdateItem, onAddPhoto }) {
             }}>
               {/* Stage Header */}
               <div 
-                className="flex justify-between items-center" 
+                className="flex justify-between items-center stage-header-row" 
                 style={{ padding: '1rem 1.5rem', cursor: 'pointer', backgroundColor: isOpen ? 'transparent' : 'white' }}
                 onClick={() => toggleStage(stage.id)}
               >
@@ -141,14 +141,14 @@ export default function Checklist({ stages, onUpdateItem, onAddPhoto }) {
                   </div>
                   <div>
                     <h3 style={{ margin: 0, fontSize: '1.125rem', color: 'var(--text-main)' }}>{stage.title}</h3>
-                    <div style={{ marginTop: '0.25rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    <div className="stage-header-stats" style={{ marginTop: '0.25rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                       <span style={{color: 'var(--status-done)'}}>Concluído: {donePct}%</span>
                       <span style={{color: '#b07300'}}>Andamento: {progPct}%</span>
                       <span style={{color: 'var(--status-not-started)'}}>Não iniciado: {notPct}%</span>
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div className="stage-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <button 
                     onClick={(e) => togglePhotoForm(e, stage.id)}
                     style={{ 
@@ -245,12 +245,12 @@ export default function Checklist({ stages, onUpdateItem, onAddPhoto }) {
               {isOpen && (
                 <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)', backgroundColor: 'white' }}>
                   {stage.items.map(item => (
-                    <div key={item.id} className="flex items-center justify-between gap-3" style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
+                    <div key={item.id} className="flex items-center justify-between gap-3 checklist-item-row" style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
                       <span style={{ fontSize: '0.95rem', color: 'var(--text-main)', fontWeight: 500, flex: 1 }}>
                         {item.text}
                       </span>
                       
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div className="checklist-item-actions" style={{ display: 'flex', gap: '0.5rem' }}>
                         <button 
                           onClick={() => onUpdateItem(stage.id, item.id, 'done')}
                           style={{ 

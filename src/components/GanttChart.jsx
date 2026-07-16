@@ -87,7 +87,7 @@ export default function GanttChart({ project, saveProject }) {
         </button>
       </div>
 
-      <div style={{ marginBottom: '2rem', overflowX: 'auto' }}>
+      <div className="table-responsive" style={{ marginBottom: '2rem' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', textAlign: 'left' }}>
           <thead>
             <tr style={{ backgroundColor: '#f1f5f9', color: 'var(--text-muted)' }}>
@@ -138,7 +138,8 @@ export default function GanttChart({ project, saveProject }) {
       </div>
 
       <h3 style={{ marginBottom: '1rem', color: 'var(--text-main)', marginTop: '2rem' }}>Gráfico de Gantt</h3>
-      <div style={{ minWidth: '800px' }}>
+      <div className="scroll-x-container">
+        <div style={{ minWidth: '800px', width: '100%' }}>
         {/* Header timeline */}
         <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', marginBottom: '1rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
           <div style={{ width: '250px', flexShrink: 0 }}>Etapa</div>
@@ -199,6 +200,7 @@ export default function GanttChart({ project, saveProject }) {
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );

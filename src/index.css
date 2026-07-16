@@ -266,37 +266,40 @@ input:focus {
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
-  .app-header { flex-direction: column; align-items: center; padding: 1rem; gap: 1rem; text-align: center; }
-  .app-header .logo-box { margin-bottom: 0.5rem; }
+  .app-header { flex-direction: column; align-items: flex-start; padding: 1rem; gap: 1rem; }
+  .app-header .logo-box { margin-bottom: 0.5rem; align-self: flex-start; }
+  .app-header h1 { font-size: 1.4rem !important; }
   
   .container { padding: 1rem; }
-  
-  .card { padding: 1.25rem; border-radius: 16px; }
+  .card { padding: 1.25rem !important; border-radius: 16px; }
   
   /* Project header mobile */
-  .project-header-actions { flex-direction: column; width: 100%; }
+  .project-header-actions { flex-direction: column; width: 100%; align-items: stretch !important; gap: 0.75rem !important; }
   .project-header-actions button { width: 100%; justify-content: center; }
+  .project-header-info { margin-left: 0 !important; flex-direction: column; gap: 0.25rem !important; margin-top: 0.5rem !important; }
   
   /* Tabs mobile */
   .tab-btn { padding: 1rem 0.75rem; font-size: 0.85rem; flex: 1; text-align: center; }
   
   /* Checklist mobile adjustments */
   .checklist-item-row { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
-  .checklist-item-actions { width: 100%; justify-content: space-between !important; }
-  .checklist-item-actions button { flex: 1; padding: 0.5rem !important; font-size: 0.7rem !important; }
+  .checklist-item-actions { width: 100%; justify-content: space-between !important; flex-wrap: wrap; }
+  .checklist-item-actions button { flex: 1; min-width: 100px; padding: 0.5rem !important; font-size: 0.75rem !important; justify-content: center; }
   
   /* Stage Header mobile */
   .stage-header-row { flex-direction: column; align-items: flex-start !important; gap: 1rem; }
-  .stage-header-stats { width: 100%; flex-wrap: wrap; }
+  .stage-header-stats { flex-direction: column !important; gap: 0.25rem !important; }
   .stage-header-actions { width: 100%; justify-content: space-between; }
   
   /* Dashboard stats mobile */
   .dashboard-stats { grid-template-columns: 1fr !important; }
   
-  /* Flowchart / Gantt spacing */
-  .flowchart-nodes { gap: 2rem !important; }
+  /* Modal padding */
+  .modal-wrapper { padding: 1rem !important; }
 }
 
 /* Base utility classes for responsive targetting */
 .tabs-container { display: flex; width: 100%; border-bottom: 1px solid var(--border-color); gap: 0.5rem; }
 .project-header-actions { display: flex; gap: 1rem; }
+.table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
+.scroll-x-container { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 1rem; }

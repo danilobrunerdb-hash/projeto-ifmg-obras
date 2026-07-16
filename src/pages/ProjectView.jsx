@@ -145,7 +145,7 @@ export default function ProjectView() {
           </div>
           <div className="flex flex-col gap-1">
             <h1 style={{ fontSize: '1.8rem', margin: 0, letterSpacing: '-0.02em', fontWeight: 800, textTransform: 'uppercase' }}>{project.name}</h1>
-            <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', fontWeight: 600 }}>
+            <div className="project-header-info" style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem', fontWeight: 600 }}>
               <span>Início: {new Date(project.startDate).toLocaleDateString('pt-BR')}</span>
               <span>Fim: {new Date(project.endDate).toLocaleDateString('pt-BR')}</span>
             </div>

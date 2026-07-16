@@ -108,25 +108,28 @@ export default function Flowchart({ stages }) {
         </h3>
       </div>
 
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '4rem',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        padding: '1rem',
-      }}>
+      <div className="scroll-x-container">
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '4rem',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          padding: '1rem',
+          minWidth: 'max-content'
+        }}>
 
-        {/* Coluna Esquerda */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-          {renderNodes(flowchartNodes.slice(0, 6))}
+          {/* Coluna Esquerda */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+            {renderNodes(flowchartNodes.slice(0, 6))}
+          </div>
+
+          {/* Coluna Direita */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+            {renderNodes(flowchartNodes.slice(6))}
+          </div>
+
         </div>
-
-        {/* Coluna Direita */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-          {renderNodes(flowchartNodes.slice(6))}
-        </div>
-
       </div>
     </div>
   );
