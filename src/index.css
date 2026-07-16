@@ -52,24 +52,25 @@ h1, h2, h3, h4 {
   color: var(--text-muted);
 }
 
-/* Premium Header */
+/* Premium Header - Destacado em Verde IFMG */
 .app-header {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: linear-gradient(135deg, var(--ifmg-green-dark) 0%, var(--ifmg-green) 100%);
   padding: 1rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 30px rgba(0, 90, 37, 0.3);
   position: sticky;
   top: 0;
   z-index: 50;
+  color: white;
 }
 
 .app-header .logo-box {
   padding: 0.5rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -78,13 +79,14 @@ h1, h2, h3, h4 {
 }
 
 .app-header h1 {
-  color: var(--ifmg-green-dark);
+  color: white !important;
   margin-bottom: 0.1rem;
   font-size: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.app-header p {
-  color: var(--text-muted);
+.app-header p, .app-header span {
+  color: rgba(255, 255, 255, 0.85) !important;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
