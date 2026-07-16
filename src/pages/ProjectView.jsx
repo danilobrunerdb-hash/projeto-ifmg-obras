@@ -47,52 +47,61 @@ export default function ProjectView() {
 
   const saveProject = async (updatedProject) => {
     try {
-      setProject(updatedProject); // Atualiza UI instantaneamente (Optimistic UI)
       const projects = await getLocalProjects(); // Usa dados em memória
       const updatedList = projects.map(p => p.id === updatedProject.id ? updatedProject : p);
       if (!updatedList.find(p => p.id === updatedProject.id)) {
         updatedList.push(updatedProject);
       }
-      saveProjectsToDB(updatedList); // Envia pro Google Sheets no background
+      // Envia pro IndexedDB e Google Sheets em background (agora com fila de concorrência)
+      saveProjectsToDB(updatedList); 
     } catch (err) {
       console.error("Storage error:", err);
     }
   };
 
   const handleUpdateItem = (stageId, itemId, newStatus) => {
-    if (!project) return;
-    const updatedProject = {
-      ...project,
-      stages: project.stages.map(stage => {
-        if (stage.id !== stageId) return stage;
-        return {
-          ...stage,
-          items: stage.items.map(item => {
-            if (item.id !== itemId) return item;
-            return { ...item, status: newStatus };
-          })
-        };
-      })
-    };
-    saveProject(updatedProject);
+    setProject(prevProject => {
+      if (!prevProject) return prevProject;
+      const updatedProject = {
+        ...prevProject,
+        stages: prevProject.stages.map(stage => {
+          if (stage.id !== stageId) return stage;
+          return {
+            ...stage,
+            items: stage.items.map(item => {
+              if (item.id !== itemId) return item;
+              return { ...item, status: newStatus };
+            })
+          };
+        })
+      };
+      saveProject(updatedProject);
+      return updatedProject;
+    });
   };
 
   const handleAddPhoto = (photoData) => {
-    if (!project) return;
-    const updatedProject = {
-      ...project,
-      photos: [photoData, ...(project.photos || [])]
-    };
-    saveProject(updatedProject);
+    setProject(prevProject => {
+      if (!prevProject) return prevProject;
+      const updatedProject = {
+        ...prevProject,
+        photos: [photoData, ...(prevProject.photos || [])]
+      };
+      saveProject(updatedProject);
+      return updatedProject;
+    });
   };
 
   const handleDeletePhoto = (photoId) => {
-    if (!project) return;
-    const updatedProject = {
-      ...project,
-      photos: (project.photos || []).filter(p => p.id !== photoId)
-    };
-    saveProject(updatedProject);
+    setProject(prevProject => {
+      if (!prevProject) return prevProject;
+      const updatedProject = {
+        ...prevProject,
+        photos: (prevProject.photos || []).filter(p => p.id !== photoId)
+      };
+      saveProject(updatedProject);
+      return updatedProject;
+    });
   };
 
   const generatePDF = async () => {

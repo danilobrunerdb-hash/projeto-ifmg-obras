@@ -8,6 +8,9 @@ localforage.config({
   storeName: 'projects_store'
 });
 
+let projectsCache = null;
+let saveQueue = Promise.resolve();
+
 export const getProjects = async () => {
   try {
     const response = await fetch(API_URL);
@@ -18,44 +21,48 @@ export const getProjects = async () => {
     
     // Salva os dados baixados no localforage como backup offline
     if (Array.isArray(data) && data.length > 0) {
+      projectsCache = data;
       await localforage.setItem('ifmg-projects-db', data);
     }
     
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Erro ao ler do Google Sheets API, tentando backup local", error);
-    // Tenta pegar do cache local se falhar a internet
-    const local = await localforage.getItem('ifmg-projects-db');
-    if (local) return local;
-    return [];
+    return await getLocalProjects();
   }
 };
 
 export const saveProjectsToDB = async (projects) => {
-  try {
-    // Salva localmente primeiro para resposta imediata da interface (cache)
-    await localforage.setItem('ifmg-projects-db', projects);
-    
-    const response = await fetch(API_URL, {
-      method: "POST",
-      // Enviamos como texto (text/plain) para evitar erros de bloqueio de CORS (Preflight) do navegador
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify(projects),
-    });
-    
-    if (!response.ok) {
-      throw new Error("Erro na rede ao salvar");
+  // Enfileira as operações de escrita para evitar perda de dados por concorrência
+  saveQueue = saveQueue.then(async () => {
+    try {
+      // Atualiza o cache em memória instantaneamente
+      projectsCache = projects;
+      // Salva localmente primeiro para resposta imediata da interface (cache)
+      await localforage.setItem('ifmg-projects-db', projects);
+      
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(projects),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Erro na rede ao salvar");
+      }
+    } catch (error) {
+      console.error("Erro ao escrever no Google Sheets API", error);
+      // Os dados já foram salvos no localforage como backup na linha acima.
     }
-  } catch (error) {
-    console.error("Erro ao escrever no Google Sheets API", error);
-    // Não lançamos o erro adiante para não quebrar a aplicação. 
-    // Os dados já foram salvos no localforage como backup na linha acima.
-  }
+  });
+  return saveQueue;
 };
 
 export const getLocalProjects = async () => {
+  if (projectsCache) return projectsCache;
   const local = await localforage.getItem('ifmg-projects-db');
-  return local ? local : [];
+  projectsCache = local ? local : [];
+  return projectsCache;
 };
