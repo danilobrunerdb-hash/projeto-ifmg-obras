@@ -1,37 +1,53 @@
-import localforage from 'localforage';
+const API_URL = "https://script.google.com/macros/s/AKfycbzo59RLKLBp6h_j1nncrHsajshc_MEKRjIZoPOiGNSsUTaDn38PmZa0D-gY9eQ0nb90/exec";
 
 export const getProjects = async () => {
   try {
-    let projects = await localforage.getItem('ifmg-projects-db');
-    
-    // Migration: If no data in localforage, check localStorage
-    if (!projects) {
-      const saved = localStorage.getItem('ifmg-projects-db');
-      if (saved) {
-        projects = JSON.parse(saved);
-        // Migrate to localforage
-        await localforage.setItem('ifmg-projects-db', projects);
-      } else {
-        projects = [];
-      }
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error("Erro na rede ao buscar projetos");
     }
-    return projects || [];
+    const data = await response.json();
+    
+    // Salva os dados baixados no localStorage como backup offline
+    if (Array.isArray(data) && data.length > 0) {
+      localStorage.setItem('ifmg-projects-db', JSON.stringify(data));
+    }
+    
+    return Array.isArray(data) ? data : [];
   } catch (error) {
-    console.error("Error reading from localforage", error);
+    console.error("Erro ao ler do Google Sheets API, tentando backup local", error);
+    // Tenta pegar do cache local se falhar a internet
+    const local = localStorage.getItem('ifmg-projects-db');
+    if (local) return JSON.parse(local);
     return [];
   }
 };
 
 export const saveProjectsToDB = async (projects) => {
   try {
-    await localforage.setItem('ifmg-projects-db', projects);
+    // Salva localmente primeiro para resposta imediata da interface (cache)
+    localStorage.setItem('ifmg-projects-db', JSON.stringify(projects));
     
-    // Cleanup old localStorage if migration was successful to free space
-    if (localStorage.getItem('ifmg-projects-db')) {
-      localStorage.removeItem('ifmg-projects-db');
+    const response = await fetch(API_URL, {
+      method: "POST",
+      // Enviamos como texto (text/plain) para evitar erros de bloqueio de CORS (Preflight) do navegador
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify(projects),
+    });
+    
+    if (!response.ok) {
+      throw new Error("Erro na rede ao salvar");
     }
   } catch (error) {
-    console.error("Error writing to localforage", error);
-    throw new Error("IndexedDB storage failed");
+    console.error("Erro ao escrever no Google Sheets API", error);
+    // Não lançamos o erro adiante para não quebrar a aplicação. 
+    // Os dados já foram salvos no localStorage como backup na linha acima.
   }
+};
+
+export const getLocalProjects = () => {
+  const local = localStorage.getItem('ifmg-projects-db');
+  return local ? JSON.parse(local) : [];
 };

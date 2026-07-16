@@ -11,7 +11,7 @@ import { Download, ArrowLeft, LayoutDashboard, ListTodo, BarChart, BookOpen, Ima
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { initialChecklist } from '../data/initialData';
-import { getProjects, saveProjectsToDB } from '../utils/storage';
+import { getProjects, saveProjectsToDB, getLocalProjects } from '../utils/storage';
 
 export default function ProjectView() {
   const { id } = useParams();
@@ -47,13 +47,15 @@ export default function ProjectView() {
 
   const saveProject = async (updatedProject) => {
     try {
-      const projects = await getProjects();
+      setProject(updatedProject); // Atualiza UI instantaneamente (Optimistic UI)
+      const projects = getLocalProjects(); // Usa dados em memória
       const updatedList = projects.map(p => p.id === updatedProject.id ? updatedProject : p);
-      await saveProjectsToDB(updatedList);
-      setProject(updatedProject);
+      if (!updatedList.find(p => p.id === updatedProject.id)) {
+        updatedList.push(updatedProject);
+      }
+      saveProjectsToDB(updatedList); // Envia pro Google Sheets no background
     } catch (err) {
       console.error("Storage error:", err);
-      throw new Error("Local storage quota exceeded");
     }
   };
 

@@ -27,7 +27,7 @@ export default function Home() {
 
   const saveProjects = async (updatedProjects) => {
     setProjects(updatedProjects);
-    await saveProjectsToDB(updatedProjects);
+    saveProjectsToDB(updatedProjects); // Fire and forget (salva em background)
   };
 
   const handleAddProject = async (e) => {
